@@ -6,19 +6,25 @@
 
     <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="fileinput.js"></script>
-    <script src="fileinput.min.js"></script>
-    <link rel="stylesheet" href="fileinput.min.css">
-    <link rel="stylesheet" href="fileinput.css">
+    <script src="dependency/fileinput.js"></script>
+    <script src="dependency/fileinput.min.js"></script>
+    <script src="dependency/bootstrap-treeview.js"></script>
+    <link rel="stylesheet" href="dependency/fileinput.min.css">
+    <link rel="stylesheet" href="dependency/fileinput.css">
+    <link rel="stylesheet" href="dependency/bootstrap-treeview.css">
     <style type="text/css">
         .form-input
         {
-            /*max-width: 330px;*/
             padding: 15px;
-/*            margin: auto 0;*/
+        }
+        .container
+        {
+            margin : 15px;
         }
 
     </style>
+
+
 
 </head>
 <body>
@@ -26,11 +32,24 @@
         <div class="form-input">
             <div class="row">
                 <div class="col-md-6">
-                    <input id="input-1" type="file" class="file" data-show-preview="false">
+                    <input id="browse" type="file" class="file"">
+                    <script type="text/javascript" src="configurationtree.js"></script>
+                    <script type="text/javascript" src="browsefile.js"></script>
+                    <script type="text/javascript">treedata = initFileInput("browse")</script>
+                </div>
+            </div>
+        </div>
+        <div class="form-input">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="configurationtree" style="height: 400px;overflow-y :scroll;">
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 
 </body>
 </html>
