@@ -266,6 +266,8 @@
 			// nodeId : unique, incremental identifier
 			node.nodeId = _this.nodes.length;
 
+			node.Id = Number(node.nodeId);
+
 			// parentId : transversing up the tree
 			node.parentId = parent.nodeId;
 
@@ -518,6 +520,7 @@
 				.addClass(node.state.selected ? 'node-selected' : '')
 				.addClass(node.searchResult ? 'search-result' : '') 
 				.attr('data-nodeid', node.nodeId)
+				.attr('id', node.Id)
 				.attr('style', _this.buildStyleOverride(node));
 
 			// Add indent/spacer to mimic tree structure

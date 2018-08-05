@@ -2,66 +2,201 @@
 To construct the tree
 */
 
-String.prototype.endWith=function(endStr)
+//to identify whether the string is endwith specific word
+
+listLimit = 500;
+
+String.prototype.endWith = function(endStr)
 {
-    // console.log(this.length + " " + endStr.length + " "+ this.lastIndexOf(endStr))
+    //console.log(this.length + " " + endStr.length + " "+ this.lastIndexOf(endStr))
     var d = this.length - endStr.length - 1;
     return (d >= 0 && this.lastIndexOf(endStr) == d)
 }
 
-function constructTree(treeData)
+String.prototype.startSpaceNum = function() {
+    var nSpace = 0;
+    var i = 0;
+    while(i < this.length)
+    {
+        if(this.charAt(i) == " ")
+            nSpace++;
+        else
+            break;
+        i++;
+    }
+    return nSpace;
+};
+
+
+function constructTreeData(fileData)
 {
-    // var data = [];
-    // var rootnode = {};
-    // rootnode['text'] = "root";
-    // rootnode["nodes"] = [];
-    // var node1 = {};
-    // var node2 = {};
-    // node1['text'] = "node1";
-    // rootnode["nodes"].push(node1);
-    // node2['text'] = "node2";
-    // rootnode["nodes"].push(node2);
-    // data.push(rootnode);
-    // return data;
     var nSpaceInit = 0;
     var bBegin = false;
-    treeData.trim().split("\n").forEach(function(line, i)
+    var rootnode = null;
+    var data = [];
+
+    var s = new stack();
+
+    var lines = fileData.trim().split("\n");
+    for(let line of lines)
     {
-        if(line.length > nSpaceInit && line != "")
+        if(line != "" && line.length > nSpaceInit + 1)
         {
+            // console.log(line);
+            // console.log(line.length);
             var pos;
-            if(!bBegin && !line.endWith("exit all"))
+            if(!bBegin && !line.endsWith("exit all", line.length-1))
             {
-                return;
+                continue;
             }
-            else if(!bBegin && line.endWith("exit all"))
+            else if(!bBegin && line.endsWith("exit all", line.length-1))
             {
-                console.log("enter");
+                bBegin = true;
+                nSpaceInit = line.startSpaceNum();
+            }
+            else if(bBegin && line.endsWith("exit all", line.length-1))
+            {
+                break;
             }
 
+            if(line.indexOf("#") == nSpaceInit)
+                continue;
+            else if(-1 != line.indexOf("echo"))
+                continue;
+            else if(-1 != line.indexOf("exit"))
+                continue;
+
+            nSpace = line.startSpaceNum();
+
+            var treeNode = {
+                text : line.substring(nSpace, line.length - 1), 
+                // nodes : [], 
+                state : {
+                    expanded : false,
+                }
+            }
+            var stackNode = new stackData(treeNode, nSpace);
+
+            if(s.isEmpty())
+            {
+                //if stack is empty, root node. so add to data. 
+                treeNode.state.expanded = true;
+                s.push(stackNode);
+                data.push(treeNode);
+            }
+            else
+            {
+                //if stack is not empty, find the parent node
+                while((!s.isEmpty()) && (s.top().space >= nSpace))
+                {
+                    s.pop();
+                }
+                if(s.isEmpty())
+                {
+                    treeNode.state.expanded = true;
+                    s.push(stackNode);
+                    data.push(treeNode);
+                }
+                else
+                {
+                    var tmpStackNode = s.top();
+                    if(! tmpStackNode.treenode.nodes)
+                    {
+                        tmpStackNode.treenode.nodes = [];
+                        tmpStackNode.treenode.nodes.push(treeNode);
+                    }
+                    else
+                    {
+                        // tmpStackNode.treenode.nodes.push(treeNode);
+                        addNode(tmpStackNode.treenode, treeNode);
+                    }
+                    s.push(stackNode);
+                }
+
+            }
         }
-        console.log("enter2");
-    });
+    }
+    // console.log(data);
+    return data;
 }
 
+function addNode(treenode, node)
+{
+    var len = treenode.nodes.length;
+    if(treenode.nodes[0].text != "1 ...")
+    {
+        if(len + 1 <= listLimit)
+        {
+            treenode.nodes.push(node);
+        }
+        else
+        {
+            var tmpnodes = treenode.nodes; 
+            var tmpnode = {
+                text : "1 ...",  
+                nodes: tmpnodes, 
+                state : {
+                    expanded : false,
+                }
+            }
+            treenode.nodes = [];
+            treenode.nodes.push(tmpnode);
+        }
+    }
+    else
+    {
+        var len2 = treenode.nodes[len - 1].nodes.length;
+        if(len2 + 1 <= listLimit)
+        {
+            treenode.nodes[len - 1].nodes.push(node);
+        }
+        else
+        {
+            var newnode = {
+                text : len * listLimit + 1 + " ...", 
+                nodes: [], 
+                state : {
+                    expanded : false,
+                }
+            }
+            newnode.nodes.push(node);
+            treenode.nodes.push(newnode);
+        }
+    }
+
+}
+
+function testdata()
+{
+    var data = [];
+    var root = {
+        text: "root", 
+        nodes :[]
+    }
+    for(i=0; i<1000 ; i++)
+    {
+        var node={
+            text: ""+i
+        }
+        root.nodes.push(node);
+    }
+    data.push(root);
+    return data;
+}
 
 function treeView(treeid, data)
 {
     var control = $("#" + treeid);
+    document.getElementById(treeid).style.height = window.screen.availHeight - 250 + "px";
 
-    console.log(data);
+    var treedata = constructTreeData(data);
+    // var treedata = testdata();
+
     control.treeview(
     {
-        data : data
-    }).treeview('collapseAll', {
-        silent : true
+        data : treedata, 
+        showBorder : false,
     });
 }
 
-function a()
-{
-    var treex = "sss" ;
-    treedata = constructTree(treex);
-    treeView("configurationtree", treedata);
-}
 

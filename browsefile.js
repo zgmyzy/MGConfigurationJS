@@ -4,7 +4,7 @@
 
 
 
-function initFileInput(ctrlName)
+function initFileInput(ctrlName, treeId, loadId)
 {
     var control = $('#' + ctrlName);
     control.fileinput
@@ -19,7 +19,9 @@ function initFileInput(ctrlName)
             var fr = new FileReader();
             fr.onloadend = function(e)
             {
-                constructTree(e.target.result)
+                document.getElementById(loadId).style.display = "";
+                treeView(treeId, e.target.result); 
+                document.getElementById(loadId).style.display = "none";
             }
             fr.onerror = function()
             {

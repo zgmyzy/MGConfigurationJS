@@ -6,22 +6,51 @@
 
     <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--     <link rel="stylesheet" href="dependency/bootstrap.min.css">
+    <script type="text/javascript" src="dependency/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="dependency/bootstrap.css">
+    <script type="text/javascript" src="dependency/bootstrap.js"></script> -->
     <script src="dependency/fileinput.js"></script>
     <script src="dependency/fileinput.min.js"></script>
     <script src="dependency/bootstrap-treeview.js"></script>
     <link rel="stylesheet" href="dependency/fileinput.min.css">
     <link rel="stylesheet" href="dependency/fileinput.css">
     <link rel="stylesheet" href="dependency/bootstrap-treeview.css">
+    <script type="text/javascript" src="configurationtree.js"></script>
+    <script type="text/javascript" src="browsefile.js"></script>
+<!--     <script type="text/javascript" src="treenode.js"></script>
+ -->    <script type="text/javascript" src="datastruct.js"></script>
+    <script type="text/javascript" src="searchtree.js"></script>
     <style type="text/css">
-        .form-input
+        .tree-view
         {
             padding: 15px;
         }
         .container
         {
             margin : 15px;
+            width : 1400px;
         }
-
+        .sidebar-module 
+        {
+          padding: 15px;
+/*          margin: 0 15px 15px;*/
+        }
+        .search-module
+        {
+            float : right;
+            width : 300px;
+        }
+        .status-gif
+        {
+            width : 34.4px;
+            height: 34.4px;
+        }
+/*        body {
+          font-family: Georgia, "Times New Roman", Times, serif;
+          color: #555;
+        }
+*/
     </style>
 
 
@@ -29,25 +58,45 @@
 </head>
 <body>
     <div class="container">
-        <div class="form-input">
-            <div class="row">
-                <div class="col-md-6">
-                    <input id="browse" type="file" class="file"">
-                    <script type="text/javascript" src="configurationtree.js"></script>
-                    <script type="text/javascript" src="browsefile.js"></script>
-                    <script type="text/javascript">treedata = initFileInput("browse")</script>
-                </div>
-            </div>
-        </div>
-        <div class="form-input">
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="configurationtree" style="height: 400px;overflow-y :scroll;">
+        <div class="row">
+            <div class="col-md-8" style="padding:15px">
+                <div class="row">
+                    <div class="col-md-6 tree-view">
+                        <input id="browse" type="file" class="file"">
+                        <script type="text/javascript">treedata = initFileInput("browse", "configurationtree", "loading")</script>
+                    </div>
+                    <div class="col-md-2 tree-view" id="loading" style="display: none">
+                        <img class="status-gif" src="status.gif"/>
+                    </div>
 
+                </div>
+                <div class="row">
+                    <div class="col-md-12 tree-view">
+                        <div id="configurationtree" style="font-size:80%; overflow-y:scroll;white-space: nowrap">
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-md-4" style="padding:15px">
+                <div class="row">
+                    <div class="sidebar-module">
+                        <div class="input-group search-module">
+                            <input type="text" class="form-control" placeholder="Search" id="searchText"/>
+                            <span class="input-group-addon" onclick="onSearchTree('configurationtree', 'searchText', 'res')"><a href="#"><i class="glyphicon glyphicon-search"></i></a></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="sidebar-module" style="padding-top: 30px; white-space: nowrap">
+                      <ol class="list-unstyled tree-view" id="res" style="height: 300px; overflow: auto">
+                      </ol>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
     </div>
 
 
