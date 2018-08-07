@@ -46,11 +46,12 @@
             width : 34.4px;
             height: 34.4px;
         }
-/*        body {
-          font-family: Georgia, "Times New Roman", Times, serif;
-          color: #555;
+        body {
+/*          font-family: Georgia, "Times New Roman", Times, serif;
+          color: #555;*/
+          height: 100%
         }
-*/
+
     </style>
 
 
@@ -82,12 +83,12 @@
                     <div class="sidebar-module">
                         <div class="input-group search-module">
                             <input type="text" class="form-control" placeholder="Search" id="searchText"/>
-                            <span class="input-group-addon" onclick="onSearchTree('configurationtree', 'searchText', 'res')"><a href="#"><i class="glyphicon glyphicon-search"></i></a></span>
+                            <span class="input-group-addon" onclick="onSearchTree('configurationtree', 'searchText', 'res', 'tab1')"><a href="#"><i class="glyphicon glyphicon-search"></i></a></span>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
+<!--                 <div class="row">
                     <div class="sidebar-module" style="padding-top: 30px; white-space: nowrap">
                       <ol class="list-unstyled tree-view" id="res" style="height: 300px; overflow: auto">
                       </ol>
@@ -97,7 +98,28 @@
                     <div class="sidebar-module">
                         
                     </div>
+                </div> -->
+                <div class="row">
+                    <div class="sidebar-module tabbable tabs-left">
+                        <ul class='nav nav-tabs'>
+                            <li class='active'><a href='#tab1' data-toggle='tab'>Search</a></li>
+                            <li><a href='#tab2' data-toggle='tab'>Reference</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab1">
+                                <div style="white-space: nowrap; padding: 15px">
+                                    <ol class="list-unstyled tree-view" id="res" style="overflow: auto">
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab2">
+                                <p>You are watching Section 2.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
+
             </div>
 
         </div>

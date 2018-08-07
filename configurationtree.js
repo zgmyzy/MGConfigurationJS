@@ -95,16 +95,7 @@ function constructTreeData(fileData)
                 else
                 {
                     var tmpStackNode = s.top();
-                    if(! tmpStackNode.treenode.nodes)
-                    {
-                        tmpStackNode.treenode.nodes = [];
-                        tmpStackNode.treenode.nodes.push(treeNode);
-                    }
-                    else
-                    {
-                        // tmpStackNode.treenode.nodes.push(treeNode);
-                        addNode(tmpStackNode.treenode, treeNode);
-                    }
+                    addNode(tmpStackNode.treenode, treeNode);
                     s.push(stackNode);
                 }
 
@@ -117,7 +108,15 @@ function constructTreeData(fileData)
 
 function addNode(treenode, node)
 {
+    if(!treenode.nodes)
+    {
+        treenode.nodes = [];
+        treenode.nodes.push(node);
+        return; 
+    }
+
     var len = treenode.nodes.length;
+
     if(treenode.nodes[0].text != "1 ...")
     {
         if(len + 1 <= listLimit)
@@ -164,10 +163,9 @@ function addNode(treenode, node)
 function treeView(treeid, data)
 {
     var control = $("#" + treeid);
-    document.getElementById(treeid).style.height = window.screen.availHeight - 250 + "px";
+    document.getElementById(treeid).style.height = window.screen.availHeight - 225 + "px";
 
     var treedata = constructTreeData(data);
-    // var treedata = testdata();
 
     control.treeview(
     {

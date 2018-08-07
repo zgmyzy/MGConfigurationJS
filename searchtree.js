@@ -1,5 +1,5 @@
 
-function onSearchTree(treeId, searchTxtId, resultId)
+function onSearchTree(treeId, searchTxtId, resultId, tabId)
 {
     var treeCtrl = $("#" + treeId);
     var txtCtrl = $("#" + searchTxtId);
@@ -18,6 +18,8 @@ function onSearchTree(treeId, searchTxtId, resultId)
     }
 
     var res = treeCtrl.treeview("search", [txt, {ignoreCase: true, revealResults: false}]);
+    // document.getElementById(tabId).style.display="block"; 
+    // document.getElementById("tab2").style.display="none"; 
     constructResList(resultId, res, txt, treeId);
 
 }
@@ -38,6 +40,7 @@ function constructResList(resultId, res, txt, treeId)
             strlist += pres + r.nodeId + mid1 + r.Id + mid2 + r.text + post;
         }
     }
+    document.getElementById(resultId).style.height = window.screen.availHeight - 265 + "px";
     document.getElementById(resultId).innerHTML = strlist;
 }
 
