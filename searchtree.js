@@ -16,30 +16,10 @@ function onSearchTree(treeId, searchTxtId, resultId)
         alert("Search tree is null. ");
         return;
     }
-    // var treeData = treeCtrl.data('treeview').getNode(0);
-    // console.log(treeData);
-    var res = getHitNodes(treeCtrl, txt);
+
+    var res = treeCtrl.treeview("search", [txt, {ignoreCase: true, revealResults: false}]);
     constructResList(resultId, res, txt, treeId);
-    
-}
 
-function getHitNodes(treeCtrl, txt)
-{
-    var res = [];
-
-    var nodeId = 0;
-    node = treeCtrl.treeview('getNode', [nodeId, {silent: true}])
-    while(node.text.indexOf)
-    {
-
-        if(-1 != node.text.indexOf(txt))
-        {
-            res.push(node);
-        }
-        node = treeCtrl.treeview('getNode', [++ nodeId, {silent: true}])
-       
-    }
-    return res;
 }
 
 function constructResList(resultId, res, txt, treeId)
@@ -58,26 +38,11 @@ function constructResList(resultId, res, txt, treeId)
             strlist += pres + r.nodeId + mid1 + r.Id + mid2 + r.text + post;
         }
     }
-
     document.getElementById(resultId).innerHTML = strlist;
 }
 
 function onRes(treeId, nodeId)
 {
     var treeCtrl = $("#" + treeId);
-
-    var tmpnode = treeCtrl.treeview('getNode', [nodeId, {silent: true}]);
-    console.log(nodeId);
-    console.log(tmpnode);
-
-    while(tmpnode.parentId)
-    {
-        tmpnode = treeCtrl.treeview('getNode', [tmpnode.parentId, {silent: true}]);
-        if(!tmpnode.state.expanded)
-        {
-            treeCtrl.treeview('expandNode', [tmpnode, {silent: true}]);
-        }
-    }
-
-    treeCtrl.treeview('selectNode', [nodeId, {silent: true}]);
+    treeCtrl.treeview("revealNode", [nodeId, {silent: true}]);
 }

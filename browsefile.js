@@ -19,9 +19,9 @@ function initFileInput(ctrlName, treeId, loadId)
             var fr = new FileReader();
             fr.onloadend = function(e)
             {
-                document.getElementById(loadId).style.display = "";
+                document.getElementById(loadId).style.visibility = "visible";
                 treeView(treeId, e.target.result); 
-                document.getElementById(loadId).style.display = "none";
+                document.getElementById(loadId).style.visibility = "hidden";
             }
             fr.onerror = function()
             {

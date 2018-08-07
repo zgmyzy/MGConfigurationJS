@@ -6,12 +6,6 @@ To construct the tree
 
 listLimit = 500;
 
-String.prototype.endWith = function(endStr)
-{
-    //console.log(this.length + " " + endStr.length + " "+ this.lastIndexOf(endStr))
-    var d = this.length - endStr.length - 1;
-    return (d >= 0 && this.lastIndexOf(endStr) == d)
-}
 
 String.prototype.startSpaceNum = function() {
     var nSpace = 0;
@@ -73,7 +67,8 @@ function constructTreeData(fileData)
                 // nodes : [], 
                 state : {
                     expanded : false,
-                }
+                },
+                // selectable: false
             }
             var stackNode = new stackData(treeNode, nSpace);
 
@@ -166,24 +161,6 @@ function addNode(treenode, node)
 
 }
 
-function testdata()
-{
-    var data = [];
-    var root = {
-        text: "root", 
-        nodes :[]
-    }
-    for(i=0; i<1000 ; i++)
-    {
-        var node={
-            text: ""+i
-        }
-        root.nodes.push(node);
-    }
-    data.push(root);
-    return data;
-}
-
 function treeView(treeid, data)
 {
     var control = $("#" + treeid);
@@ -196,6 +173,9 @@ function treeView(treeid, data)
     {
         data : treedata, 
         showBorder : false,
+    }).on("nodeSelected", function(event, node)
+    {
+        alert(node.text);
     });
 }
 
