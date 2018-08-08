@@ -160,7 +160,7 @@ function addNode(treenode, node)
 
 }
 
-function treeView(treeid, data)
+function treeView(treeid, data, refid)
 {
     var control = $("#" + treeid);
     document.getElementById(treeid).style.height = window.screen.availHeight - 225 + "px";
@@ -169,11 +169,11 @@ function treeView(treeid, data)
 
     control.treeview(
     {
-        data : treedata, 
+        data : treedata,
         showBorder : false,
     }).on("nodeSelected", function(event, node)
     {
-        alert(node.text);
+        showRef(treeid, node, refid);
     });
 }
 

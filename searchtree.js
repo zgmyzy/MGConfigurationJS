@@ -26,23 +26,36 @@ function onSearchTree(treeId, searchTxtId, resultId, tabId)
 
 function constructResList(resultId, res, txt, treeId)
 {
-    var strlist = "";
-    var pres = "<li onclick='onRes(" + '"' + treeId + '", '
-    var mid1 = ")'><a href='#"
-    var mid2 = "'>";
-    var post = "</a></li>";
+    // var strlist = "";
+    // var pres = "<li onclick='onRes(" + '"' + treeId + '", '
+    // var mid1 = ")'><a href='#"
+    // var mid2 = "'>";
+    // var post = "</a></li>";
     strlist = "<li style='font-size: 120%'><i>" + res.length + ' match(es) "' + txt + '"</i><li>';
 
     if(res.length != 0)
     {
         for(let r of res)
         {
-            strlist += pres + r.nodeId + mid1 + r.Id + mid2 + r.text + post;
+            // strlist += pres + r.nodeId + mid1 + r.Id + mid2 + r.text + post;
+            strlist += generateLi(treeId, r);
         }
     }
     document.getElementById(resultId).style.height = window.screen.availHeight - 265 + "px";
     document.getElementById(resultId).innerHTML = strlist;
 }
+
+function generateLi(treeId, node, text = null)
+{
+    var str = "";
+    var pres = "<li onclick='onRes(" + '"' + treeId + '", '
+    var mid1 = ")'><a href='#"
+    var mid2 = "'>";
+    var post = "</a></li>";
+    str = pres + node.nodeId + mid1 + node.Id + mid2 + (text ? text : node.text) + post;
+    return str;
+}
+
 
 function onRes(treeId, nodeId)
 {

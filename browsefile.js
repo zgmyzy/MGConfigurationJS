@@ -4,7 +4,7 @@
 
 
 
-function initFileInput(ctrlName, treeId, loadId)
+function initFileInput(ctrlName, treeId, /*loadId*/refId)
 {
     var control = $('#' + ctrlName);
     control.fileinput
@@ -19,9 +19,9 @@ function initFileInput(ctrlName, treeId, loadId)
             var fr = new FileReader();
             fr.onloadend = function(e)
             {
-                document.getElementById(loadId).style.visibility = "visible";
-                treeView(treeId, e.target.result); 
-                document.getElementById(loadId).style.visibility = "hidden";
+                // document.getElementById(loadId).style.visibility = "visible";
+                treeView(treeId, e.target.result, refId); 
+                // document.getElementById(loadId).style.visibility = "hidden";
             }
             fr.onerror = function()
             {

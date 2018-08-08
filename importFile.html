@@ -16,11 +16,12 @@
     <link rel="stylesheet" href="dependency/fileinput.min.css">
     <link rel="stylesheet" href="dependency/fileinput.css">
     <link rel="stylesheet" href="dependency/bootstrap-treeview.css">
+    <link rel="stylesheet" href="dependency/bootstrap.vertical-tabs.min.css">
     <script type="text/javascript" src="configurationtree.js"></script>
     <script type="text/javascript" src="browsefile.js"></script>
-<!--     <script type="text/javascript" src="treenode.js"></script>
- -->    <script type="text/javascript" src="datastruct.js"></script>
+    <script type="text/javascript" src="datastruct.js"></script>
     <script type="text/javascript" src="searchtree.js"></script>
+    <script type="text/javascript" src="policymgr.js"></script>
     <style type="text/css">
         .tree-view
         {
@@ -29,7 +30,8 @@
         .container
         {
             margin : 15px;
-            width : 1400px;
+            padding : 15px;
+            width : 95%;
         }
         .sidebar-module 
         {
@@ -64,7 +66,7 @@
                 <div class="row">
                     <div class="col-md-6 tree-view">
                         <input id="browse" type="file" class="file"">
-                        <script type="text/javascript">treedata = initFileInput("browse", "configurationtree", "loading")</script>
+                        <script type="text/javascript">initFileInput("browse", "configurationtree", "ref")</script>
                     </div>
                     <div class="col-md-2 tree-view" id="loading" style="visibility:hidden">
                         <img class="status-gif" src="status.gif"/>
@@ -88,19 +90,8 @@
                     </div>
                 </div>
 
-<!--                 <div class="row">
-                    <div class="sidebar-module" style="padding-top: 30px; white-space: nowrap">
-                      <ol class="list-unstyled tree-view" id="res" style="height: 300px; overflow: auto">
-                      </ol>
-                    </div>
-                </div>
                 <div class="row">
-                    <div class="sidebar-module">
-                        
-                    </div>
-                </div> -->
-                <div class="row">
-                    <div class="sidebar-module tabbable tabs-left">
+                    <div class="sidebar-module tabbable">
                         <ul class='nav nav-tabs'>
                             <li class='active'><a href='#tab1' data-toggle='tab'>Search</a></li>
                             <li><a href='#tab2' data-toggle='tab'>Reference</a></li>
@@ -113,12 +104,34 @@
                                 </div>
                             </div>
                             <div class="tab-pane" id="tab2">
-                                <p>You are watching Section 2.</p>
+                                <div style="white-space: nowrap; padding: 15px">
+                                    <ol class="list-unstyled tree-view" id="ref" style="overflow: auto">
+                                    </ol>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
+<!--                 <div class="col-md-9">
+                  <!-- Tab panes 
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
+                        <div style="white-space: nowrap; padding: 15px">
+                            <ol class="list-unstyled tree-view" id="res" style="overflow: auto">
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab2">Reference</div>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <ul class="nav nav-tabs tabs-right">
+                    <li class="active"><a href="#tab1" data-toggle="tab">Search</a></li>
+                    <li><a href="#tab2" data-toggle="tab">Reference</a></li>
+                  </ul>
+                </div> -->
 
             </div>
 
