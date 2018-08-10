@@ -25,36 +25,19 @@ function onSearchTree(treeId, searchTxtId, resultId, tabId)
 function constructResList(resultId, res, txt, treeId)
 {
     strlist = "<li style='font-size: 120%'><i>" + res.length + ' match(es) "' + txt + '"</i><li>';
-
-    if(res.length != 0)
-    {
-        for(let r of res)
-        {
-            strlist += generateLi(treeId, r);
-        }
-    }
-    document.getElementById(resultId).style.height = window.screen.availHeight - 265 + "px";
-    document.getElementById(resultId).innerHTML = strlist;
+    showResult(treeId, res, resultId, strlist);
 }
 
-function generateLi(treeId, node, text = null)
+function onKeyDown(event, treeId, searchTxtId, resultId, tabId)
 {
-    if(!node || !node.text || !node.nodeId || !node.Id)
-    {
-        return "";
-    }
-    var str = "";
-    var pres = "<li onclick='onRes(" + '"' + treeId + '", '
-    var mid1 = ")'><a href='#"
-    var mid2 = "'>";
-    var post = "</a></li>";
-    str = pres + node.nodeId + mid1 + node.Id + mid2 + (text ? text : node.text) + post;
-    return str;
-}
+     var e = event || window.event || arguments.callee.caller.arguments[0];
+     if(e && e.keyCode==27){ // Esc
 
+     }
+    if(e && e.keyCode==113){ // F2
 
-function onRes(treeId, nodeId)
-{
-    var treeCtrl = $("#" + treeId);
-    treeCtrl.treeview("revealNode", [nodeId, {silent: true}]);
+     }
+     if(e && e.keyCode==13){ // enter
+          onSearchTree(treeId, searchTxtId, resultId, tabId);
+     }
 }

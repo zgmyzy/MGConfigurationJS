@@ -4,21 +4,26 @@ show the related info for the pcc-rule in the reference tab
 
 function showRef(treeId, node, refId)
 {
+    var treeCtrl = $("#" + treeId);
+    var res = null;
     if(node.text.startsWith("policy-rule-unit "))
     {
-        getPolicyRuleUnitRef(treeId, node, refId);
+        res = getPolicyRuleUnitRef(treeCtrl, node);
     }
     else
     {
-        getRef(treeId, node, refId);
+        res = getRef(treeCtrl, node);
     }
 
+    showResult(treeId, res, refId);
+
+    treeCtrl.treeview("clearSearch");
 
  }
 
- function getRef(treeId, node, refId)
+ function getRef(treeCtrl, node)
  {
-    var treeCtrl = $("#" + treeId);
+    if(!treeCtrl || !node || !node.text) return;
     var re = /"(.*?)"/g;
     var group = node.text.match(re);
     if(group)
@@ -33,31 +38,14 @@ function showRef(treeId, node, refId)
 
             }
         }
-        showInRef(treeId, res, refId);
-        treeCtrl.treeview("clearSearch");
+        return res;
     }
 
 
  }
 
- function showInRef(treeId, res, refId)
- {
-    var strHTML = "";
-    for(let n of res)
-    {
-        strHTML += generateLi(treeId, n);
-    }
-
-    document.getElementById(refId).style.height = window.screen.availHeight - 265 + "px";
-    document.getElementById(refId).innerHTML = strHTML;
- }
-
-
-
-function getPolicyRuleUnitRef(treeId, node, refId)
+function getPolicyRuleUnitRef(treeCtrl, node)
 {
-    var treeCtrl = $("#" + treeId);
-    // node = treeCtrl.treeview("getNode", [34959, {silent: true}]);
     var res =
     {
         pru     : null,
@@ -72,9 +60,13 @@ function getPolicyRuleUnitRef(treeId, node, refId)
     }
 
     var flowinfo = getPRUDes(node);
-    res.pru = node;
-    res.flow = flowinfo[0];
-    res.layer = flowinfo[1];
+    if(flowinfo instanceof Array)
+    {
+        res.pru = node;
+        res.flow = flowinfo[0];
+        res.layer = flowinfo[1];
+    }
+
 
     if("L7" == res.layer)
     {
@@ -90,12 +82,12 @@ function getPolicyRuleUnitRef(treeId, node, refId)
         res.prb = getPRBofPR(treeCtrl, res.pr);
     }
 
-    showPRUInRef(treeId, res, refId);
-    treeCtrl.treeview("clearSearch");
+    return res;
 }
 
 function getPROfPRU(treeCtrl, node)
 {
+    if(!treeCtrl || !node || !node.text) return;
     var prnode = treeCtrl.treeview("search", [node.text, {ignoreCase: false, revealResults: false}]);
     if(prnode.length <= 1)
         return null;
@@ -104,6 +96,7 @@ function getPROfPRU(treeCtrl, node)
 
 function getPRBofPR(treeCtrl, node)
 {
+    if(!treeCtrl || !node || !node.text) return;
     var prbnodes = [];
     var re = new RegExp('(policy-rule ".*") policy-rule-unit .*');
     var group = node.text.match(re);
@@ -123,18 +116,20 @@ function getPRBofPR(treeCtrl, node)
 
 function getPRUDes(node)
 {
+    if(!node || !node.nodes) return;
     var flow = [];
     var layer = "L3/4";
     var aacg = null;
+
     for(let n of node.nodes)
     {
         var txt = n.text;
-        if(txt.startsWith("flow-description "))
+        if(txt.startsWith("flow-description ") && n.nodes)
         {
             for(let m of n.nodes)
             {
                 txt += " " + m.text;
-                if(m.text.startsWith("match"))
+                if(m.text.startsWith("match") && m.nodes)
                 {
                     for(let l of m.nodes)
                     {
@@ -148,7 +143,7 @@ function getPRUDes(node)
                 }
             }
         }
-        if(txt.startsWith("qos "))
+        if(txt.startsWith("qos ") && n.nodes)
         {
             for(let m of n.nodes)
             {
@@ -162,6 +157,7 @@ function getPRUDes(node)
 
 function getAACGOfPRU(treeCtrl, node)
 {
+    if(!treeCtrl || !node || !node.text) return;
     var cgname = node.text.substring(19, node.text.length - 1);
 
     var cgres = treeCtrl.treeview("search", [cgname, {ignoreCase: false, revealResults: false}]);
@@ -172,18 +168,15 @@ function getAACGOfPRU(treeCtrl, node)
     }
 }
 
-function getAPPGOfAACG(treeCtrl, node)
-{
-    return treeCtrl.treeview("getSiblings", [node, {silent: true}]);
-}
-
 function getAPPOfAACG(treeCtrl, node)
 {
+    if(!treeCtrl || !node) return;
     return treeCtrl.treeview("getParent", [node, {silent: true}]);
 }
 
 function getAPPGFromAPP(treeCtrl, node)
 {
+    if(!treeCtrl || !node || !node.nodes) return;
     for(let n of node.nodes)
     {
         if(n.text.startsWith("app-group"))
@@ -193,6 +186,7 @@ function getAPPGFromAPP(treeCtrl, node)
 
 function getAPPFOfAPP(treeCtrl, node)
 {
+    if(!treeCtrl || !node || !node.text) return;
     var appname = node.text.substring(0, node.text.length - 7);
     var appnodes = treeCtrl.treeview("search", [appname, {ignoreCase: false, revealResults: false}]);
     var entries = [];
@@ -218,37 +212,3 @@ function getAPPFOfAPP(treeCtrl, node)
     return [entries, entriesdes];
 }
 
- function showPRUInRef(treeId, res, refId)
- {
-    var strHTML = "";
-    var pre = "<li>"
-    var post = "</li>"
-    strHTML += generateLi(treeId, res.pru);
-    strHTML += pre + res.layer + post;
-    if(res.pr)
-    {
-        strHTML += generateLi(treeId, res.pr);
-    }
-    for(let n of res.prb)
-    {
-        strHTML += generateLi(treeId, n);
-    }
-    for(let n of res.flow)
-    {
-        strHTML += pre + n + post;
-    }
-
-    if("L7" == res.layer)
-    {
-        strHTML += generateLi(treeId, res.aacg);
-        strHTML += generateLi(treeId, res.app);
-        strHTML += generateLi(treeId, res.appg);
-        for(var i=0; i<res.appf[0].length; i++)
-        {
-            strHTML += generateLi(treeId, res.appf[0][i], res.appf[1][i]);
-        }
-    }
-
-    document.getElementById(refId).style.height = window.screen.availHeight - 265 + "px";
-    document.getElementById(refId).innerHTML = strHTML;
- }

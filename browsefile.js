@@ -4,7 +4,7 @@
 
 
 
-function initFileInput(ctrlName, treeId, loadId, refId)
+function initFileInput(ctrlName, treeId, loadId, resId, refId)
 {
     var control = $('#' + ctrlName);
     control.fileinput
@@ -22,7 +22,7 @@ function initFileInput(ctrlName, treeId, loadId, refId)
                 // setTimeout(treeView(treeId, e.target.result, refId), 10000);
                 // setTimeout(function(){document.getElementById(loadId).style.visibility = "hidden";}, 200);
                 // document.getElementById(loadId).style.visibility = "visible";
-                treeView(treeId, e.target.result, refId); 
+                treeView(treeId, e.target.result, resId, refId);
                 // document.getElementById(loadId).style.visibility = "hidden";
             }
             fr.onerror = function()

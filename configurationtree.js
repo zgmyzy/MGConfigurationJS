@@ -106,6 +106,9 @@ function constructTreeData(fileData)
     return data;
 }
 
+///in the treeview, if the nodes number is too large, the expanding will be slow. 
+///So set listLimit(curently 500) to reconstruct the tree.
+
 function addNode(treenode, node)
 {
     if(!treenode.nodes)
@@ -127,7 +130,7 @@ function addNode(treenode, node)
         {
             var tmpnodes = treenode.nodes; 
             var tmpnode = {
-                text : "1 ...",  
+                text : "1 ...", 
                 nodes: tmpnodes, 
                 state : {
                     expanded : false,
@@ -160,7 +163,7 @@ function addNode(treenode, node)
 
 }
 
-function treeView(treeid, data, refid)
+function treeView(treeid, data, resid, refid)
 {
     var control = $("#" + treeid);
     document.getElementById(treeid).style.height = window.screen.availHeight - 225 + "px";
@@ -175,6 +178,13 @@ function treeView(treeid, data, refid)
     {
         showRef(treeid, node, refid);
     });
+
+    clearDoc(resid);
+    clearDoc(refid)
 }
 
+function clearDoc(id)
+{
+    document.getElementById(id).innerHTML = "";
+}
 
