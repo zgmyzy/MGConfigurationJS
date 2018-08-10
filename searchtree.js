@@ -39,6 +39,10 @@ function constructResList(resultId, res, txt, treeId)
 
 function generateLi(treeId, node, text = null)
 {
+    if(!node || !node.text || !node.nodeId || !node.Id)
+    {
+        return "";
+    }
     var str = "";
     var pres = "<li onclick='onRes(" + '"' + treeId + '", '
     var mid1 = ")'><a href='#"

@@ -6,14 +6,50 @@ function showRef(treeId, node, refId)
 {
     if(node.text.startsWith("policy-rule-unit "))
     {
-        res = getPolicyRuleUnitRef(treeId, node, refId);
+        getPolicyRuleUnitRef(treeId, node, refId);
     }
-    // else if(node.text.startsWith("policy-rule "))
-    // {
-    //     getPolicyRuleRef(treeId, node, refId);
-    // }
+    else
+    {
+        getRef(treeId, node, refId);
+    }
 
 
+ }
+
+ function getRef(treeId, node, refId)
+ {
+    var treeCtrl = $("#" + treeId);
+    var re = /"(.*?)"/g;
+    var group = node.text.match(re);
+    if(group)
+    {
+        var res = [];
+        for(let g of group)
+        {
+            var r = treeCtrl.treeview("search", [g, {ignoreCase: false, revealResults: false}]);
+            for(let n of r)
+            {
+                if(res.indexOf(n) == -1) res.push(n);
+
+            }
+        }
+        showInRef(treeId, res, refId);
+        treeCtrl.treeview("clearSearch");
+    }
+
+
+ }
+
+ function showInRef(treeId, res, refId)
+ {
+    var strHTML = "";
+    for(let n of res)
+    {
+        strHTML += generateLi(treeId, n);
+    }
+
+    document.getElementById(refId).style.height = window.screen.availHeight - 265 + "px";
+    document.getElementById(refId).innerHTML = strHTML;
  }
 
 
@@ -53,8 +89,9 @@ function getPolicyRuleUnitRef(treeId, node, refId)
     {
         res.prb = getPRBofPR(treeCtrl, res.pr);
     }
-    
+
     showPRUInRef(treeId, res, refId);
+    treeCtrl.treeview("clearSearch");
 }
 
 function getPROfPRU(treeCtrl, node)
