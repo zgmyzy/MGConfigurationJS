@@ -17,7 +17,7 @@ function showRef(treeId, node, refId)
 
     showResult(treeId, res, refId);
 
-    treeCtrl.treeview("clearSearch");
+    // treeCtrl.treeview("clearSearch");
 
  }
 
@@ -50,13 +50,14 @@ function getPolicyRuleUnitRef(treeCtrl, node)
     {
         pru     : null,
         layer   : "",   //L3/4/7
-        pr      : null,   //policy-rule
-        prb     : [],   //policy-rule-base
+        // prb     : [],   //policy-rule-base
         flow    : [],   //pru description
         aacg    : null,   //aa-charging-group
         appg    : null,   //app-group
         app     : null,   //application
         appf    : [],   //app-filter
+        pr      : null,   //policy-rule
+
     }
 
     var flowinfo = getPRUDes(node);
@@ -77,10 +78,10 @@ function getPolicyRuleUnitRef(treeCtrl, node)
         res.appf = getAPPFOfAPP(treeCtrl, res.app);
     }
     res.pr = getPROfPRU(treeCtrl, node);
-    if(res.pr)
-    {
-        res.prb = getPRBofPR(treeCtrl, res.pr);
-    }
+    // if(res.pr)
+    // {
+    //     res.prb = getPRBofPR(treeCtrl, res.pr);
+    // }
 
     return res;
 }
@@ -91,7 +92,8 @@ function getPROfPRU(treeCtrl, node)
     var prnode = treeCtrl.treeview("search", [node.text, {ignoreCase: false, revealResults: false}]);
     if(prnode.length <= 1)
         return null;
-    return prnode[1];
+
+    return prnode.slice(1);
 }
 
 function getPRBofPR(treeCtrl, node)

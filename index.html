@@ -2,27 +2,22 @@
 <html>
 <head>
     <title>Configuration Viewer</title>
-<!--      <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
- -->
- <!--   <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
-    <script type="text/javascript" src="dependency/jquery.min.js"></script>
-    <script type="text/javascript" src="dependency/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="dependency/bootstrap.min.css">
-<!--     <link rel="stylesheet" href="dependency/bootstrap.css">--> 
-    <script src="dependency/fileinput.js"></script>
-    <script src="dependency/fileinput.min.js"></script>
-    <script src="dependency/bootstrap-treeview.js"></script>
-    <link rel="stylesheet" href="dependency/fileinput.min.css">
-    <link rel="stylesheet" href="dependency/fileinput.css">
-    <link rel="stylesheet" href="dependency/bootstrap-treeview.css">
-<!--     <link rel="stylesheet" href="dependency/bootstrap.vertical-tabs.min.css"> --> 
-    <script type="text/javascript" src="configurationtree.js"></script>
-    <script type="text/javascript" src="browsefile.js"></script>
-    <script type="text/javascript" src="datastruct.js"></script>
-    <script type="text/javascript" src="searchtree.js"></script>
-    <script type="text/javascript" src="reftree.js"></script>
-    <script type="text/javascript" src="tabmrg.js"></script>
+    <script type="text/javascript" src="mgcfg/dependency/jquery.min.js"></script>
+    <script type="text/javascript" src="mgcfg/dependency/bootstrap.min.js"></script>
+    <script type="text/javascript" src="mgcfg/utils/configurationtree.js"></script>
+    <script type="text/javascript" src="mgcfg/utils/browsefile.js"></script>
+    <script type="text/javascript" src="mgcfg/utils/datastruct.js"></script>
+    <script type="text/javascript" src="mgcfg/utils/searchtree.js"></script>
+    <script type="text/javascript" src="mgcfg/utils/reftree.js"></script>
+    <script type="text/javascript" src="mgcfg/utils/tabmgr.js"></script>
+    <script src="mgcfg/dependency/fileinput.js"></script>
+    <script src="mgcfg/dependency/fileinput.min.js"></script>
+    <script src="mgcfg/dependency/bootstrap-treeview.js"></script>
+    <link rel="stylesheet" href="mgcfg/dependency/bootstrap.min.css">
+    <link rel="stylesheet" href="mgcfg/dependency/fileinput.min.css">
+    <link rel="stylesheet" href="mgcfg/dependency/fileinput.css">
+    <link rel="stylesheet" href="mgcfg/dependency/bootstrap-treeview.css">
+
     <style type="text/css">
         .tree-view
         {
@@ -37,17 +32,11 @@
         .sidebar-module 
         {
           padding: 15px;
-/*          margin: 0 15px 15px;*/
         }
         .search-module
         {
             float : right;
             width : 300px;
-        }
-        .status-gif
-        {
-            width : 34.4px;
-            height: 34.4px;
         }
         body {
 /*          font-family: Georgia, "Times New Roman", Times, serif;
@@ -67,11 +56,8 @@
                 <div class="row">
                     <div class="col-md-6 tree-view">
                         <input id="browse" type="file" class="file"">
-                        <script type="text/javascript">initFileInput("browse", "configurationtree", "loading", "res", "ref")</script>
+                        <script type="text/javascript">initFileInput("browse", "configurationtree", "tabs", "res", "ref")</script>
                     </div>
-<!--                     <div class="col-md-2 tree-view" id="loading" style="visibility:hidden">
-                        <img class="status-gif" src="status.gif"/>
-                    </div> -->
                     <div class="tree-view"">please import the configuration/TS file. </div>
 
                 </div>
@@ -92,7 +78,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" style="visibility: hidden;" id="tabs">
                     <div class="sidebar-module tabbable">
                         <ul class='nav nav-tabs'>
                             <li class='active'><a href='#tab1' data-toggle='tab'>Search</a></li>
@@ -115,25 +101,6 @@
                     </div>
 
                 </div>
-<!--                 <div class="col-md-9">
-                  <!-- Tab panes 
-                  <div class="tab-content">
-                    <div class="tab-pane active" id="tab1">
-                        <div style="white-space: nowrap; padding: 15px">
-                            <ol class="list-unstyled tree-view" id="res" style="overflow: auto">
-                            </ol>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="tab2">Reference</div>
-                  </div>
-                </div>
-
-                <div class="col-md-3">
-                  <ul class="nav nav-tabs tabs-right">
-                    <li class="active"><a href="#tab1" data-toggle="tab">Search</a></li>
-                    <li><a href="#tab2" data-toggle="tab">Reference</a></li>
-                  </ul>
-                </div> -->
 
             </div>
 

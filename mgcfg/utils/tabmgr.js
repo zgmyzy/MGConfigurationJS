@@ -2,6 +2,7 @@
 generate the Li tag and click event for the tab.
 */
 
+var revealedNode = null;
 
 function generateLi(treeId, node, text = null)
 {
@@ -53,7 +54,7 @@ function generateLi(treeId, node, text = null)
         }
     }
 
-    document.getElementById(resId).style.height = window.screen.availHeight - 265 + "px";
+    document.getElementById(resId).style.height = window.screen.availHeight - 310 + "px";
     document.getElementById(resId).innerHTML = strHTML;
  }
 
@@ -61,5 +62,11 @@ function generateLi(treeId, node, text = null)
 function onRes(treeId, nodeId)
 {
     var treeCtrl = $("#" + treeId);
+    if(revealedNode && revealedNode.style)
+    {
+        revealedNode.style.color = "#000000";
+    }
     treeCtrl.treeview("revealNode", [nodeId, {silent: true}]);
+    revealedNode = document.getElementById(nodeId);
+    revealedNode.style.color = "OrangeRed";
 }
