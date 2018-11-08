@@ -1,6 +1,29 @@
 /*
-show the related info for the pcc-rule in the reference tab
+show the related info for the clicked item in the reference tab
 */
+
+function refPlugin(treeId, node, refId)
+{
+    tabPlugin(this, treeId, node, refId);
+    this.generateRes = function()
+    {
+        var this.res = null;
+        if(this.node.text.startsWith("policy-rule-unit "))
+        {
+            this.res = getPolicyRuleUnitRef(this.treeCtrl, this.node);
+        }
+        else
+        {
+            this.res = getRef(this.treeCtrl, this.node);
+        }
+
+    }
+
+    this.showRes = function()
+    {
+        this.showResult();
+    }
+}
 
 function showRef(treeId, node, refId)
 {

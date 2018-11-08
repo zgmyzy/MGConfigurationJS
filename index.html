@@ -10,6 +10,8 @@
     <script type="text/javascript" src="mgcfg/utils/searchtree.js"></script>
     <script type="text/javascript" src="mgcfg/utils/reftree.js"></script>
     <script type="text/javascript" src="mgcfg/utils/tabmgr.js"></script>
+    <script type="text/javascript" src="mgcfg/utils/plaintree.js"></script>
+    <script type="text/javascript" src="mgcfg/utils/tabplugin.js"></script>
     <script src="mgcfg/dependency/fileinput.js"></script>
     <script src="mgcfg/dependency/fileinput.min.js"></script>
     <script src="mgcfg/dependency/bootstrap-treeview.js"></script>
@@ -56,7 +58,9 @@
                 <div class="row">
                     <div class="col-md-6 tree-view">
                         <input id="browse" type="file" class="file"">
-                        <script type="text/javascript">initFileInput("browse", "configurationtree", "tabs", "res", "ref")</script>
+                        <script type="text/javascript">
+                            initFileInput("browse", "configurationtree", "tabs", "res", "ref", "plain");
+                        </script>
                     </div>
                     <div class="tree-view"">please import the configuration/TS file. </div>
 
@@ -83,6 +87,7 @@
                         <ul class='nav nav-tabs'>
                             <li class='active'><a href='#tab1' data-toggle='tab'>Search</a></li>
                             <li><a href='#tab2' data-toggle='tab'>Reference</a></li>
+                            <li><a href='#tab3' data-toggle='tab'>Plain Text</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="tab1">
@@ -94,6 +99,12 @@
                             <div class="tab-pane" id="tab2">
                                 <div style="white-space: nowrap; padding: 15px">
                                     <ol class="list-unstyled tree-view" id="ref" style="overflow: auto">
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab3">
+                                <div style="white-space: nowrap; padding: 15px">
+                                    <ol class="list-unstyled tree-view" id="plain" style="overflow: auto">
                                     </ol>
                                 </div>
                             </div>

@@ -3,7 +3,7 @@
  */
 
 
-function initFileInput(ctrlName, treeId, tabId, resId, refId)
+function initFileInput(ctrlName, treeId, tabId, resId, refId, plainId)
 {
     var control = $('#' + ctrlName);
     control.fileinput
@@ -15,7 +15,7 @@ function initFileInput(ctrlName, treeId, tabId, resId, refId)
     {
         if (window.FileReader)
         {
-            constructTree(treeId, resId, refId, files[0]);
+            constructTree(treeId, resId, refId, plainId, files[0]);
             document.getElementById(tabId).style.visibility = "visible";
 
         }

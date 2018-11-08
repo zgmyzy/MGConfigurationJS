@@ -8,6 +8,7 @@ LIST_LIMIT = 500;
 CHUNK_SIZE = 10*1024;
 
 
+
 String.prototype.startSpaceNum = function() {
     let nSpace = 0;
     let i = 0;
@@ -35,7 +36,7 @@ function concatenate(resultConstructor, ...arrays) {
     return result;
 };
 
-function constructTree(treeId, resId, refId, file)
+function constructTree(treeId, resId, refId, plainId, file)
 {
 
     var fr = new FileReader();
@@ -111,6 +112,7 @@ function constructTree(treeId, resId, refId, file)
             {
                 bBegin = true;
                 nSpaceInit = line.startSpaceNum();
+                return true;
             }
             else if(bBegin && line.endsWith("exit all", line.length))
                 return false;
@@ -119,10 +121,24 @@ function constructTree(treeId, resId, refId, file)
                 return true;
             else if(-1 != line.indexOf("echo"))
                 return true;
-            else if(-1 != line.indexOf("exit"))
-                return true;
 
             nSpace = line.startSpaceNum();
+
+            if(-1 != line.indexOf("exit") && !s.isEmpty())
+            {
+                while((!s.isEmpty()) && (s.top().index > nSpace))
+                {
+                    s.pop(); //find the corresponding node for the exit..
+                }
+                if(!s.isEmpty())
+                {
+                    var tmpStackNode = s.top();
+                    tmpStackNode.treenode.tags.push("exit");
+                }
+
+                return true;
+            }
+
 
             var treeNode =
             {
@@ -130,14 +146,16 @@ function constructTree(treeId, resId, refId, file)
                 state : {
                     expanded : false,
                 },
+                tags: [],
             }
             var stackNode = new stackData(treeNode, nSpace);
 
             //if stack is not empty, find the parent node
-            while((!s.isEmpty()) && (s.top().space >= nSpace))
+            while((!s.isEmpty()) && (s.top().index >= nSpace))
             {
                 s.pop();
             }
+
             if(s.isEmpty())
             {
                 treeNode.state.expanded = true;
@@ -166,10 +184,12 @@ function constructTree(treeId, resId, refId, file)
         }).on("nodeSelected", function(event, node)
         {
             showRef(treeId, node, refId);
+            showPlain(treeId, node, plainId);
         });
 
         clearDoc(resId);
         clearDoc(refId);
+        clearDoc(plainId);
         document.getElementById(treeId).style.height = window.screen.availHeight - 270 + "px";
     }
 }

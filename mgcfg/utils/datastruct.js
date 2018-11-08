@@ -25,10 +25,10 @@ function stack(){
 
 
 // TO BE STORED IN stack.dataStore
-function stackData(treenode = null, space = 0)
+function stackData(treenode = null, index = 0)
 {
     this.treenode = treenode;
-    this.space = space;
+    this.index = index;
 }
 
 
