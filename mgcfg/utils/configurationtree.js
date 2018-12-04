@@ -6,6 +6,9 @@ To construct the tree
 
 LIST_LIMIT = 500;
 CHUNK_SIZE = 10*1024;
+se = null;
+ref = null;
+pla = null;
 
 
 
@@ -36,7 +39,7 @@ function concatenate(resultConstructor, ...arrays) {
     return result;
 };
 
-function constructTree(treeId, resId, refId, plainId, file)
+function constructTree(treeId, rearchId, refId, plainId, txtId, file)
 {
 
     var fr = new FileReader();
@@ -86,7 +89,7 @@ function constructTree(treeId, resId, refId, plainId, file)
 
     fr.onerror = function()
     {
-        alert("Failed when opening the file " + files[0].name + "! ")
+        alert("Failed when opening the file " + file.name + "! ")
     }
 
     function seek()
@@ -176,6 +179,9 @@ function constructTree(treeId, resId, refId, plainId, file)
     function generateTree()
     {
         var control = $("#" + treeId);
+        ref = new refPlugin(treeId, refId);
+        se = new searchPlugin(treeId, rearchId, txtId);
+        pla = new plainPlugin(treeId, plainId);
         control.treeview(
         {
             data : data,
@@ -183,11 +189,13 @@ function constructTree(treeId, resId, refId, plainId, file)
             highlightSearchResults : false,
         }).on("nodeSelected", function(event, node)
         {
-            showRef(treeId, node, refId);
-            showPlain(treeId, node, plainId);
+            ref.getNode(node);
+            ref.run();
+            pla.getNode(node);
+            pla.run();
         });
 
-        clearDoc(resId);
+        clearDoc(rearchId);
         clearDoc(refId);
         clearDoc(plainId);
         document.getElementById(treeId).style.height = window.screen.availHeight - 270 + "px";

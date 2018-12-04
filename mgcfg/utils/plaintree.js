@@ -1,90 +1,76 @@
 /*show the plain text for the selected node */
-plainRes = null;
-start = 0; 
-end = 0;
+
 TRUNKCATED_SIZE = 6000;
 SCROLL_STEP = 2000;
 
-function showPlain(treeId, node, plainId)
+function plainPlugin(treeId, plainId)
 {
-    var treeCtrl = $("#" + treeId);
 
-    getPlain(treeCtrl, node);
+    tabPlugin.call(this, treeId, plainId);
 
-    showPlainRes(plainId);
+    this.start = 0;
+    this.end = 0;
 
-    $("#" + plainId).scroll(function()
+    this.generateRes = function()
     {
-        autoShowPlainRes(plainId);
-    })
+        var resTemp = "";
+        if (!this.node || !this.treeCtrl) return;
 
-}
+        let s = [];
 
-function getPlain(treeCtrl, node)
-{
-    if (!node || !treeCtrl) return;
-    if (!node.nodes) plainRes = node.text;
-    let s = [];
-    plainRes = "";
-
-    let i = 0;
-    s.push(new stackData(node, i));
-    while(s.length)
-    {
-        let tmp = s.shift();
-        for(let j=0; j<tmp.index; j++)
+        let i = 0;
+        s.push(new stackData(this.node, i));
+        while(s.length)
         {
-            plainRes += "&nbsp;&nbsp;&nbsp;&nbsp;";
-        }
-        plainRes += tmp.treenode.text + "<br>";
-
-        if(tmp.treenode.tags && tmp.treenode.tags.length > 0)
-        {
-            //exit
-            var exitNode =
+            let tmp = s.shift();
+            for(let j=0; j<tmp.index; j++)
             {
-                text : "exit",
+                resTemp += "&nbsp;&nbsp;&nbsp;&nbsp;";
             }
-            s.unshift(new stackData(exitNode, tmp.index));
-        }
-        if(tmp.treenode.nodes)
-        {
-            for(let len = tmp.treenode.nodes.length; len; len--)
-            {
-                s.unshift(new stackData(tmp.treenode.nodes[len-1], tmp.index + 1));
-            }
-        }
+            resTemp += tmp.treenode.text + "<br>";
 
+            if(tmp.treenode.tags && tmp.treenode.tags.length > 0)
+            {
+                //exit
+                var exitNode =
+                {
+                    text : "exit",
+                }
+                s.unshift(new stackData(exitNode, tmp.index));
+            }
+            if(tmp.treenode.nodes)
+            {
+                for(let len = tmp.treenode.nodes.length; len; len--)
+                {
+                    s.unshift(new stackData(tmp.treenode.nodes[len-1], tmp.index + 1));
+                }
+            }
+
+        }
+        this.res = resTemp;
     }
-    // return plainRes;
+
+    this.showRes = function()
+    {
+        document.getElementById(this.resId).innerHTML = this.res.substring(0, TRUNKCATED_SIZE);
+        document.getElementById(this.resId).style.height = window.screen.availHeight - 310 + "px";
+        this.end = this.res.length > TRUNKCATED_SIZE ? TRUNKCATED_SIZE : this.res.length;
+        $("#" + this.resId).scroll(() =>
+        {
+            this.autoShowPlainRes();
+        })
+    }
 }
 
-function showPlainRes(plainId)
-{
-    document.getElementById(plainId).innerHTML = plainRes.substring(0, TRUNKCATED_SIZE);
-    document.getElementById(plainId).style.height = window.screen.availHeight - 310 + "px";
-    end = plainRes.length > TRUNKCATED_SIZE ? TRUNKCATED_SIZE : plainRes.length;
-}
-
-function autoShowPlainRes(plainId)
-{
-    var scrollTop = $("#" + plainId).scrollTop();
-    var scrollHeight = $("#" + plainId).prop("scrollHeight");
-    var windowHeight = $("#" + plainId).height();
+plainPlugin.prototype.autoShowPlainRes = function(){
+    var scrollTop = $("#" + this.resId).scrollTop();
+    var scrollHeight = $("#" + this.resId).prop("scrollHeight");
+    var windowHeight = $("#" + this.resId).height();
 
 
     if (scrollTop + windowHeight > scrollHeight-50)
     {
-        end = end + SCROLL_STEP > plainRes.length ? plainRes.length : end + SCROLL_STEP;
-        document.getElementById(plainId).innerHTML = plainRes.substring(start, end);
+        this.end = this.end + SCROLL_STEP > this.res.length ? this.res.length : this.end + SCROLL_STEP;
+        document.getElementById(this.resId).innerHTML = this.res.substring(this.start, this.end);
     }
-    // else if(scrollTop < 50)
-    // {
-    //     start = start - SCROLL_STEP > 0 ? start - SCROLL_STEP : 0;
-    //     end -= SCROLL_STEP;
-    //     document.getElementById(plainId).innerHTML = plainRes.substring(start, end);
-    // }
-    // return end;
-
-}
-
+};

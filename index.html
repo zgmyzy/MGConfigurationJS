@@ -9,7 +9,6 @@
     <script type="text/javascript" src="mgcfg/utils/datastruct.js"></script>
     <script type="text/javascript" src="mgcfg/utils/searchtree.js"></script>
     <script type="text/javascript" src="mgcfg/utils/reftree.js"></script>
-    <script type="text/javascript" src="mgcfg/utils/tabmgr.js"></script>
     <script type="text/javascript" src="mgcfg/utils/plaintree.js"></script>
     <script type="text/javascript" src="mgcfg/utils/tabplugin.js"></script>
     <script src="mgcfg/dependency/fileinput.js"></script>
@@ -59,7 +58,7 @@
                     <div class="col-md-6 tree-view">
                         <input id="browse" type="file" class="file"">
                         <script type="text/javascript">
-                            initFileInput("browse", "configurationtree", "tabs", "res", "ref", "plain");
+                            initFileInput("browse", "configurationtree", "tabs", "search", "ref", "plain", "searchText");
                         </script>
                     </div>
                     <div class="tree-view"">please import the configuration/TS file. </div>
@@ -76,8 +75,8 @@
                 <div class="row">
                     <div class="sidebar-module">
                         <div class="input-group search-module">
-                            <input type="text" class="form-control" placeholder="Search" id="searchText" onkeydown="onKeyDown(event, 'configurationtree', 'searchText', 'res', 'tab1')"/>
-                            <span class="input-group-addon" onclick="onSearchTree('configurationtree', 'searchText', 'res', 'tab1')"><a href="#"><i class="glyphicon glyphicon-search"></i></a></span>
+                            <input type="text" class="form-control" placeholder="Search" id="searchText" onkeydown="onKeyDown(event)"/>
+                            <span class="input-group-addon" onclick="onSearchTree()"><a href="#"><i class="glyphicon glyphicon-search"></i></a></span>
                         </div>
                     </div>
                 </div>
@@ -92,7 +91,7 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="tab1">
                                 <div style="white-space: nowrap; padding: 15px">
-                                    <ol class="list-unstyled tree-view" id="res" style="overflow: auto">
+                                    <ol class="list-unstyled tree-view" id="search" style="overflow: auto">
                                     </ol>
                                 </div>
                             </div>

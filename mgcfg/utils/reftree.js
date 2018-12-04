@@ -2,74 +2,49 @@
 show the related info for the clicked item in the reference tab
 */
 
-function refPlugin(treeId, node, refId)
+function refPlugin(treeId, refId)
 {
-    tabPlugin(this, treeId, node, refId);
+    tabPlugin.call(this, treeId, refId);
+    
     this.generateRes = function()
     {
-        var this.res = null;
+        this.res = null;
         if(this.node.text.startsWith("policy-rule-unit "))
         {
-            this.res = getPolicyRuleUnitRef(this.treeCtrl, this.node);
+            this.res = this.getPolicyRuleUnitRef();
         }
         else
         {
-            this.res = getRef(this.treeCtrl, this.node);
+            this.res = this.getRef();
         }
 
-    }
-
-    this.showRes = function()
-    {
-        this.showResult();
     }
 }
 
-function showRef(treeId, node, refId)
+refPlugin.prototype.getRef = function()
 {
-    var treeCtrl = $("#" + treeId);
-    var res = null;
-    if(node.text.startsWith("policy-rule-unit "))
-    {
-        res = getPolicyRuleUnitRef(treeCtrl, node);
-    }
-    else
-    {
-        res = getRef(treeCtrl, node);
-    }
-
-    showResult(treeId, res, refId);
-
-    // treeCtrl.treeview("clearSearch");
-
- }
-
- function getRef(treeCtrl, node)
- {
-    if(!treeCtrl || !node || !node.text) return;
+    if(!this.treeCtrl || !this.node || !this.node.text) return;
     var re = /"(.*?)"/g;
-    var group = node.text.match(re);
+    var group = this.node.text.match(re);
     if(group)
     {
-        var res = [];
+        var resTemp = [];
         for(let g of group)
         {
-            var r = treeCtrl.treeview("search", [g, {ignoreCase: false, revealResults: false}]);
+            var r = this.treeCtrl.treeview("search", [g, {ignoreCase: false, revealResults: false}]);
             for(let n of r)
             {
-                if(res.indexOf(n) == -1) res.push(n);
+                if(resTemp.indexOf(n) == -1) resTemp.push(n);
 
             }
         }
-        return res;
+        return resTemp;
     }
+};
 
-
- }
-
-function getPolicyRuleUnitRef(treeCtrl, node)
+refPlugin.prototype.getPolicyRuleUnitRef = function()
 {
-    var res =
+    var resTemp =
     {
         pru     : null,
         layer   : "",   //L3/4/7
@@ -83,70 +58,70 @@ function getPolicyRuleUnitRef(treeCtrl, node)
 
     }
 
-    var flowinfo = getPRUDes(node);
+    var flowinfo = this.getPRUDes();
     if(flowinfo instanceof Array)
     {
-        res.pru = node;
-        res.flow = flowinfo[0];
-        res.layer = flowinfo[1];
+        resTemp.pru = this.node;
+        resTemp.flow = flowinfo[0];
+        resTemp.layer = flowinfo[1];
     }
 
 
-    if("L7" == res.layer)
+    if("L7" == resTemp.layer)
     {
         var aacg = flowinfo[2];
-        res.aacg = getAACGOfPRU(treeCtrl, aacg);
-        res.app = getAPPOfAACG(treeCtrl, res.aacg);
-        res.appg = getAPPGFromAPP(treeCtrl, res.app);
-        res.appf = getAPPFOfAPP(treeCtrl, res.app);
+        resTemp.aacg = this.getAACGOfPRU(aacg);
+        resTemp.app = this.getAPPOfAACG(resTemp.aacg);
+        resTemp.appg = this.getAPPGFromAPP(resTemp.app);
+        resTemp.appf = this.getAPPFOfAPP(resTemp.app);
     }
-    res.pr = getPROfPRU(treeCtrl, node);
+    resTemp.pr = this.getPROfPRU();
     // if(res.pr)
     // {
     //     res.prb = getPRBofPR(treeCtrl, res.pr);
     // }
 
-    return res;
+    return resTemp;
 }
 
-function getPROfPRU(treeCtrl, node)
+refPlugin.prototype.getPROfPRU = function()
 {
-    if(!treeCtrl || !node || !node.text) return;
-    var prnode = treeCtrl.treeview("search", [node.text, {ignoreCase: false, revealResults: false}]);
+    if(!this.treeCtrl || !this.node || !this.node.text) return;
+    var prnode = this.treeCtrl.treeview("search", [this.node.text, {ignoreCase: false, revealResults: false}]);
     if(prnode.length <= 1)
         return null;
 
     return prnode.slice(1);
 }
 
-function getPRBofPR(treeCtrl, node)
+refPlugin.prototype.getPRBofPR = function()
 {
-    if(!treeCtrl || !node || !node.text) return;
+    if(!this.treeCtrl || !this.node || !this.node.text) return;
     var prbnodes = [];
     var re = new RegExp('(policy-rule ".*") policy-rule-unit .*');
-    var group = node.text.match(re);
+    var group = this.node.text.match(re);
     var prname = group[1];
-    var prnode = treeCtrl.treeview("search", [prname, {ignoreCase: false, revealResults: false}]);
+    var prnode = this.treeCtrl.treeview("search", [prname, {ignoreCase: false, revealResults: false}]);
     if(prnode.length <=1)
         return null;
     for(let n of prnode)
     {
-        if(n == node)
+        if(n == this.node)
             continue;
-        pnode = treeCtrl.treeview("getParent", [n, {silent: true}]);
+        pnode = this.treeCtrl.treeview("getParent", [n, {silent: true}]);
         prbnodes.push(pnode);
     }
     return prbnodes;
 }
 
-function getPRUDes(node)
+refPlugin.prototype.getPRUDes = function()
 {
-    if(!node || !node.nodes) return;
+    if(!this.node || !this.node.nodes) return;
     var flow = [];
     var layer = "L3/4";
     var aacg = null;
 
-    for(let n of node.nodes)
+    for(let n of this.node.nodes)
     {
         var txt = n.text;
         if(txt.startsWith("flow-description ") && n.nodes)
@@ -180,12 +155,12 @@ function getPRUDes(node)
     return [flow, layer, aacg];
 }
 
-function getAACGOfPRU(treeCtrl, node)
+refPlugin.prototype.getAACGOfPRU = function(node)
 {
-    if(!treeCtrl || !node || !node.text) return;
+    if(!this.treeCtrl || !node || !node.text) return;
     var cgname = node.text.substring(19, node.text.length - 1);
 
-    var cgres = treeCtrl.treeview("search", [cgname, {ignoreCase: false, revealResults: false}]);
+    var cgres = this.treeCtrl.treeview("search", [cgname, {ignoreCase: false, revealResults: false}]);
     for(let r of cgres)
     {
         if(r.text == 'charging-group "' + cgname + '"')
@@ -193,15 +168,15 @@ function getAACGOfPRU(treeCtrl, node)
     }
 }
 
-function getAPPOfAACG(treeCtrl, node)
+refPlugin.prototype.getAPPOfAACG = function(node)
 {
-    if(!treeCtrl || !node) return;
-    return treeCtrl.treeview("getParent", [node, {silent: true}]);
+    if(!this.treeCtrl || !node) return;
+    return this.treeCtrl.treeview("getParent", [node, {silent: true}]);
 }
 
-function getAPPGFromAPP(treeCtrl, node)
+refPlugin.prototype.getAPPGFromAPP = function(node)
 {
-    if(!treeCtrl || !node || !node.nodes) return;
+    if(!this.treeCtrl || !node || !node.nodes) return;
     for(let n of node.nodes)
     {
         if(n.text.startsWith("app-group"))
@@ -209,11 +184,11 @@ function getAPPGFromAPP(treeCtrl, node)
     }
 }
 
-function getAPPFOfAPP(treeCtrl, node)
+refPlugin.prototype.getAPPFOfAPP = function(node)
 {
-    if(!treeCtrl || !node || !node.text) return;
+    if(!this.treeCtrl || !node || !node.text) return;
     var appname = node.text.substring(0, node.text.length - 7);
-    var appnodes = treeCtrl.treeview("search", [appname, {ignoreCase: false, revealResults: false}]);
+    var appnodes = this.treeCtrl.treeview("search", [appname, {ignoreCase: false, revealResults: false}]);
     var entries = [];
     var entriesdes = [];
 
@@ -221,7 +196,7 @@ function getAPPFOfAPP(treeCtrl, node)
     {
         if(n != node)
         {
-            entries.push(treeCtrl.treeview("getParent", [n, {silent: true}]));
+            entries.push(this.treeCtrl.treeview("getParent", [n, {silent: true}]));
         }
     }
     for (let n of entries)
@@ -236,4 +211,3 @@ function getAPPFOfAPP(treeCtrl, node)
 
     return [entries, entriesdes];
 }
-
